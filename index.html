@@ -8,11 +8,48 @@
     <style>
         .connector-tag {
             transition: all 0.3s ease;
+            position: relative;
+            cursor: help;
         }
         .found-connector {
             background-color: #dcfce7;
             color: #166534;
             border-color: #22c55e;
+        }
+        /* Tooltip Styles */
+        .tooltip {
+            visibility: hidden;
+            width: 220px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            line-height: 1.25;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        .connector-tag:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
         }
         @media print {
             .no-print { display: none; }
@@ -33,13 +70,13 @@
         <!-- Step 1: Transitions -->
         <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="bg-slate-800 text-white px-6 py-3 font-semibold flex justify-between items-center">
-                <span>Paso 1: Vocabulario de Transición (Conectores)</span>
+                <span>Paso 1: Vocabulario de Transición (Pasa el cursor para ver ejemplos)</span>
                 <span class="text-xs bg-slate-700 px-2 py-1 rounded">5 Minutos</span>
             </div>
             <div class="p-6">
-                <p class="mb-4 text-slate-600">Para sacar un 5, evita palabras básicas como "pero" o "también". Estudia esta lista; el sistema los detectará en tu escritura más abajo.</p>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="connector-list">
-                    <!-- Connectors will be injected here -->
+                <p class="mb-4 text-slate-600">Para sacar un 5, evita palabras básicas. Pasa el cursor sobre los conectores para ver su significado y un ejemplo.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="connector-list">
+                    <!-- Connectors will be injected here via JavaScript -->
                 </div>
             </div>
         </section>
@@ -115,37 +152,52 @@
     </main>
 
     <script>
-        const connectors = [
-            "Sin embargo", "No obstante", "Asimismo", "Cabe agregar que", 
-            "Debido a que", "Ya que", "Desde mi punto de vista", "A mi parecer",
-            "En resumidas cuentas", "En última instancia", "A diferencia de",
-            "Mientras que", "Por otro lado", "A pesar de", "Sino que", "Por lo tanto"
+        const connectorData = [
+            { word: "Sin embargo", mean: "However", ex: "Me gusta el arte; sin embargo, no tengo talento." },
+            { word: "No obstante", mean: "Nevertheless", ex: "Hizo frío; no obstante, salimos a caminar." },
+            { word: "Asimismo", mean: "Likewise / Additionally", ex: "Leímos el libro; asimismo, vimos la película." },
+            { word: "Cabe agregar que", mean: "It's worth adding that", ex: "Cabe agregar que el clima afectó el resultado." },
+            { word: "Debido a que", mean: "Due to the fact that", ex: "Llegamos tarde debido a que el tren se rompió." },
+            { word: "Ya que", mean: "Since / Seeing that", ex: "Ya que estamos aquí, vamos a comer." },
+            { word: "Desde mi punto de vista", mean: "From my point of view", ex: "Desde mi punto de vista, la educación es clave." },
+            { word: "A mi parecer", mean: "In my opinion", ex: "A mi parecer, el examen fue justo." },
+            { word: "En resumidas cuentas", mean: "In short / In a nutshell", ex: "En resumidas cuentas, el plan funcionó." },
+            { word: "En última instancia", mean: "Ultimately / In the end", ex: "En última instancia, tú decides." },
+            { word: "A diferencia de", mean: "Unlike / In contrast to", ex: "A diferencia de Juan, María prefiere el té." },
+            { word: "Mientras que", mean: "While / Whereas", ex: "Yo estudio, mientras que él descansa." },
+            { word: "Por otro lado", mean: "On the other hand", ex: "Es barato; por otro lado, es de mala calidad." },
+            { word: "A pesar de", mean: "Despite / In spite of", ex: "A pesar del ruido, pude dormir." },
+            { word: "Sino que", mean: "But rather", ex: "No solo es inteligente, sino que es humilde." },
+            { word: "Por lo tanto", mean: "Therefore", ex: "Estudió mucho; por lo tanto, sacó un cinco." }
         ];
 
         function init() {
             const list = document.getElementById('connector-list');
-            connectors.forEach(c => {
-                const span = document.createElement('span');
-                span.id = `tag-${c.replace(/\s+/g, '-').toLowerCase()}`;
-                span.className = "connector-tag text-xs border border-slate-200 p-2 rounded bg-white text-center";
-                span.innerText = c;
-                list.appendChild(span);
+            connectorData.forEach(item => {
+                const container = document.createElement('div');
+                container.id = `tag-${item.word.replace(/\s+/g, '-').toLowerCase()}`;
+                container.className = "connector-tag text-xs border border-slate-200 p-2 rounded bg-white text-center font-medium shadow-sm hover:shadow-md";
+                
+                const wordSpan = document.createElement('span');
+                wordSpan.innerText = item.word;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = "tooltip";
+                tooltip.innerHTML = `<strong>${item.mean}</strong><br><br><em>Example:</em> ${item.ex}`;
+                
+                container.appendChild(wordSpan);
+                container.appendChild(tooltip);
+                list.appendChild(container);
             });
         }
 
         function selectPrompt(index) {
-            // Reset buttons
             [0,1,2].forEach(i => {
                 document.getElementById(`btn-${i}`).classList.remove('border-red-500', 'bg-red-50');
             });
-            // Highlight selected
             document.getElementById(`btn-${index}`).classList.add('border-red-500', 'bg-red-50');
-            
-            // Show next sections
             document.getElementById('t-chart-section').classList.remove('hidden');
             document.getElementById('writing-section').classList.remove('hidden');
-            
-            // Smooth scroll
             document.getElementById('t-chart-section').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -155,14 +207,14 @@
             usedContainer.innerHTML = '';
             
             let count = 0;
-            connectors.forEach(c => {
-                const tag = document.getElementById(`tag-${c.replace(/\s+/g, '-').toLowerCase()}`);
-                if (text.includes(c.toLowerCase())) {
+            connectorData.forEach(item => {
+                const tag = document.getElementById(`tag-${item.word.replace(/\s+/g, '-').toLowerCase()}`);
+                if (text.includes(item.word.toLowerCase())) {
                     tag.classList.add('found-connector');
                     
                     const badge = document.createElement('span');
                     badge.className = "bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded border border-green-300";
-                    badge.innerText = `✓ ${c}`;
+                    badge.innerText = `✓ ${item.word}`;
                     usedContainer.appendChild(badge);
                     count++;
                 } else {
@@ -174,7 +226,6 @@
                 usedContainer.innerHTML = '<span class="text-slate-400 italic text-sm">Todavía no has usado conectores avanzados...</span>';
             }
 
-            // Simple sentence estimation
             const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5).length;
             document.getElementById('sentence-count').innerText = `Oraciones estimadas: ${sentences}`;
             if (sentences >= 5) {
