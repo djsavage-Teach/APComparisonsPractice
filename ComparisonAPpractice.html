@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparación AP Spanish: Comparación Cultural</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .connector-tag {
+            transition: all 0.3s ease;
+        }
+        .found-connector {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900 pb-20">
+
+    <header class="bg-red-700 text-white py-8 mb-8 shadow-md">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-3xl font-bold italic">Examen AP: Repaso de Martes</h1>
+            <p class="mt-2 text-red-100 uppercase tracking-widest text-sm">Práctica Autoguiada • 45 Minutos</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 space-y-8">
+        
+        <!-- Step 1: Transitions -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-800 text-white px-6 py-3 font-semibold flex justify-between items-center">
+                <span>Paso 1: Vocabulario de Transición (Conectores)</span>
+                <span class="text-xs bg-slate-700 px-2 py-1 rounded">5 Minutos</span>
+            </div>
+            <div class="p-6">
+                <p class="mb-4 text-slate-600">Para sacar un 5, evita palabras básicas como "pero" o "también". Estudia esta lista; el sistema los detectará en tu escritura más abajo.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="connector-list">
+                    <!-- Connectors will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Choice Board -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-800 text-white px-6 py-3 font-semibold flex justify-between items-center">
+                <span>Paso 2: Elige tu Tema</span>
+                <span class="text-xs bg-slate-700 px-2 py-1 rounded">5 Minutos</span>
+            </div>
+            <div class="p-6">
+                <div class="grid md:grid-cols-3 gap-4" id="choice-board">
+                    <button onclick="selectPrompt(0)" id="btn-0" class="p-4 border-2 border-slate-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition text-left">
+                        <span class="block font-bold text-red-700 mb-1">Opción A</span>
+                        <span class="text-sm">Identidades: ¿Cómo influyen personajes históricos en la identidad cultural?</span>
+                    </button>
+                    <button onclick="selectPrompt(1)" id="btn-1" class="p-4 border-2 border-slate-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition text-left">
+                        <span class="block font-bold text-red-700 mb-1">Opción B</span>
+                        <span class="text-sm">Ciencia/Tecnología: ¿Cuál es el papel de las redes sociales en la comunicación?</span>
+                    </button>
+                    <button onclick="selectPrompt(2)" id="btn-2" class="p-4 border-2 border-slate-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition text-left">
+                        <span class="block font-bold text-red-700 mb-1">Opción C</span>
+                        <span class="text-sm">Familias: ¿Cuál es la importancia de las celebraciones festivas en la vida?</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: T-Chart -->
+        <section id="t-chart-section" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-800 text-white px-6 py-3 font-semibold flex justify-between items-center">
+                <span>Paso 3: Lluvia de Ideas (T-Chart)</span>
+                <span class="text-xs bg-slate-700 px-2 py-1 rounded">15 Minutos</span>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 gap-0 border-2 border-slate-300 rounded-lg">
+                    <div class="border-r-2 border-slate-300">
+                        <div class="bg-slate-100 p-3 font-bold border-b-2 border-slate-300 text-center uppercase tracking-tight">Mi Comunidad</div>
+                        <textarea placeholder="Ej: En mi ciudad celebramos el 4 de julio con fuegos artificiales..." class="w-full h-40 p-4 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div>
+                        <div class="bg-slate-100 p-3 font-bold border-b-2 border-slate-300 text-center uppercase tracking-tight">Una Comunidad Hispana</div>
+                        <textarea placeholder="Ej: En cambio, en España, la Semana Santa involucra procesiones masivas..." class="w-full h-40 p-4 focus:outline-none resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Writing -->
+        <section id="writing-section" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-800 text-white px-6 py-3 font-semibold flex justify-between items-center">
+                <span>Paso 4: Comparación (5 Oraciones Avanzadas)</span>
+                <span class="text-xs bg-slate-700 px-2 py-1 rounded">20 Minutos</span>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-slate-500 mb-4 italic">Escribe tus 5 oraciones comparativas. El sistema resaltará los conectores avanzados que utilices.</p>
+                <textarea id="essay-input" oninput="checkConnectors()" placeholder="Empieza a escribir aquí..." class="w-full h-64 p-4 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg"></textarea>
+                
+                <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide">Conectores Utilizados:</h4>
+                    <div id="used-connectors" class="flex flex-wrap gap-2">
+                        <span class="text-slate-400 italic text-sm">Todavía no has usado conectores avanzados...</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-between items-center">
+                    <div id="sentence-count" class="text-sm font-bold text-slate-600 uppercase">Oraciones estimadas: 0</div>
+                    <button onclick="window.print()" class="bg-red-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-800 transition no-print">Imprimir / Guardar como PDF</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const connectors = [
+            "Sin embargo", "No obstante", "Asimismo", "Cabe agregar que", 
+            "Debido a que", "Ya que", "Desde mi punto de vista", "A mi parecer",
+            "En resumidas cuentas", "En última instancia", "A diferencia de",
+            "Mientras que", "Por otro lado", "A pesar de", "Sino que", "Por lo tanto"
+        ];
+
+        function init() {
+            const list = document.getElementById('connector-list');
+            connectors.forEach(c => {
+                const span = document.createElement('span');
+                span.id = `tag-${c.replace(/\s+/g, '-').toLowerCase()}`;
+                span.className = "connector-tag text-xs border border-slate-200 p-2 rounded bg-white text-center";
+                span.innerText = c;
+                list.appendChild(span);
+            });
+        }
+
+        function selectPrompt(index) {
+            // Reset buttons
+            [0,1,2].forEach(i => {
+                document.getElementById(`btn-${i}`).classList.remove('border-red-500', 'bg-red-50');
+            });
+            // Highlight selected
+            document.getElementById(`btn-${index}`).classList.add('border-red-500', 'bg-red-50');
+            
+            // Show next sections
+            document.getElementById('t-chart-section').classList.remove('hidden');
+            document.getElementById('writing-section').classList.remove('hidden');
+            
+            // Smooth scroll
+            document.getElementById('t-chart-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function checkConnectors() {
+            const text = document.getElementById('essay-input').value.toLowerCase();
+            const usedContainer = document.getElementById('used-connectors');
+            usedContainer.innerHTML = '';
+            
+            let count = 0;
+            connectors.forEach(c => {
+                const tag = document.getElementById(`tag-${c.replace(/\s+/g, '-').toLowerCase()}`);
+                if (text.includes(c.toLowerCase())) {
+                    tag.classList.add('found-connector');
+                    
+                    const badge = document.createElement('span');
+                    badge.className = "bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded border border-green-300";
+                    badge.innerText = `✓ ${c}`;
+                    usedContainer.appendChild(badge);
+                    count++;
+                } else {
+                    tag.classList.remove('found-connector');
+                }
+            });
+
+            if (count === 0) {
+                usedContainer.innerHTML = '<span class="text-slate-400 italic text-sm">Todavía no has usado conectores avanzados...</span>';
+            }
+
+            // Simple sentence estimation
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5).length;
+            document.getElementById('sentence-count').innerText = `Oraciones estimadas: ${sentences}`;
+            if (sentences >= 5) {
+                document.getElementById('sentence-count').classList.replace('text-slate-600', 'text-green-600');
+            } else {
+                document.getElementById('sentence-count').classList.replace('text-green-600', 'text-slate-600');
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
